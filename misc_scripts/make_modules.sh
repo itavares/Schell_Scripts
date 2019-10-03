@@ -15,9 +15,10 @@ if [ $# -ne 1 ] ; then
 fi
 
 
+
 HOST="linuxlab006.seas.wustl.edu"
-USER="" #your wustl key
-PASS="" #your password here!
+USER="" #wustlid
+PASS="" # your password <keep it secret .-."
 FILE=$1
 
 #create Makefile for compilation
@@ -26,8 +27,17 @@ FILE_COMP=$(echo $FILE  | cut -f1 -d '.')
 touch Makefile
 echo "obj-m := "$FILE_COMP".o " > Makefile
 
+
+#create compile script
+touch build_module_in_server.sh
+echo "#!/bin/bash" >> build_module_in_server.sh
+echo "module add raspberry" >> build_module_in_server.sh
+echo "KERNEL=kernel7" >> build_module_in_server.sh
+echo "LINUX_SOURCE=../linux_source/linux" >> build_module_in_server.sh
+echo "make -C $LINUX_SOURCE ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- SUBDIRS=$PWD modules" >> build_module_in_server.sh
+
 #send c and Makefile file to be compiled at the linux server
-# check for the right PATH!
+
 expect -c "
 
 spawn sftp ${USER}@${HOST}
@@ -55,7 +65,8 @@ echo " "
 echo "Done uploading to server........."
 # Now we SSH into and compile the thing...yay
 # we are running a seperate script because of execpt shell
-#check for the right PATH
+#./compile_ssh.sh
+
 expect -c "
 
 spawn ssh ${USER}@${HOST} \"cd /tmp/compile/ighor.tavares/module; ls ; chmod +x build_module_in_server.sh ; ./build_module_in_server.sh ; exit \"
