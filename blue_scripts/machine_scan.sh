@@ -28,8 +28,11 @@ if [ "$EUID" -ne 0 ] ; then
 fi
 
 #create report
-touch report.txt
+curr_date__=$(date | cut -d" " -f1,2,3,6 | tr ' ' '_')
+mkdir $curr_date__
 
+#touch $curr_date__/${curr_date__}report.txt
+touch report.txt
 #system info
 echo $deli"OS INFO"$deli >> report.txt
 lsb_release -a >> report.txt 2>>/dev/null
@@ -80,6 +83,9 @@ for i in $(last -a | grep -E -o "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5
 	echo -ne "$increment"
 	increment=$increment$loading	
 done
+
+mv report.txt $curr_date__/${curr_date__}_report.txt
+mv  user_bash_history/ $curr_date__/
 sleep 1
 echo " "
 echo "done"

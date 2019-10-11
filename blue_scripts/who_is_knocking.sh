@@ -12,7 +12,7 @@
 
 cat /var/log/auth.log | grep -E -o "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" > ip_list.txt
 
-uniq -u ip_list.txt > sorted_ip.txt
+cat ip_list.txt | sort | uniq  > sorted_ip.txt
 #clear file
 rm ip_list.txt
 
